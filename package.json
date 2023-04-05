@@ -1,0 +1,32 @@
+{
+  "name": "todos-server",
+  "version": "1.0.0",
+  "description": "Backend application server.",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "start": "nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aryaniyaps/todos-nodejs.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aryaniyaps/todos-nodejs/issues"
+  },
+  "dependencies": {
+    "@koa/router": "^12.0.0",
+    "@prisma/client": "^4.12.0",
+    "koa": "^2.14.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "nodemon": "^2.0.22",
+    "prisma": "^4.12.0",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.0.3"
+  }
+}
