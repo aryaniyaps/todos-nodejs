@@ -9,12 +9,12 @@ const todoSchema = object({
 
 // service methods.
 async function getTodos() {
-  return await repo.fetchTodos();
+  return await repo.getTodos();
 }
 
 async function createTodo(data: { content: string }) {
   const result = await todoSchema.validate(data);
-  return await repo.insertTodo(result);
+  return await repo.createTodo(result);
 }
 
 async function deleteTodo(todoId: string) {
