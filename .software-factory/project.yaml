@@ -1,0 +1,21 @@
+schemaVersion: software-factory.project/v2
+extensions: []
+automations:
+  - schemaVersion: software-factory.automation/v1
+    id: semgrep
+    schedule: '0 3 * * 1'
+    daggerFunction: semgrep
+    issueTitle: Fix Semgrep findings
+    task: Repair findings or evolve this repository's local Semgrep rules.
+  - schemaVersion: software-factory.automation/v1
+    id: alint
+    schedule: '0 3 * * 2'
+    daggerFunction: alint
+    issueTitle: Fix Alint findings
+    task: Repair findings or evolve this repository's local Alint rules.
+  - schemaVersion: software-factory.automation/v1
+    id: ls-lint
+    schedule: '0 3 * * 3'
+    daggerFunction: ls-lint
+    issueTitle: Fix ls-lint findings
+    task: Repair findings or evolve this repository's local ls-lint rules.
