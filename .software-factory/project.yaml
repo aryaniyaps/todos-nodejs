@@ -1,5 +1,4 @@
-schemaVersion: software-factory.project/v2
-extensions: []
+schemaVersion: software-factory.project/v3
 inputs: []
 automations:
   - schemaVersion: software-factory.automation/v1
