@@ -1,4 +1,9 @@
-schemaVersion: software-factory.project/v3
+schemaVersion: software-factory.project/v4
+development:
+  prepare: [npm, ci]
+  initialize: [npx, prisma, generate]
+  start: [npm, run, dev]
+  health: [sh, -c, 'curl -fsS "http://127.0.0.1:${PORT:-3000}/api/todos" >/dev/null']
 inputs: []
 automations:
   - schemaVersion: software-factory.automation/v1
