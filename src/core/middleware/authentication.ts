@@ -5,17 +5,18 @@ const unauthorized = (ctx: Context) => {
   ctx.body = { message: "Unauthorized" };
 };
 
-async function authentication(ctx: Context, next: Next) {
-  const configuredToken = process.env.TODOS_API_TOKEN;
-  const authorization = ctx.get("Authorization");
-  const match = authorization.match(/^Bearer\s+(.+)$/i);
+export function authentication(configuredToken: string | undefined) {
+  return async function authenticate(ctx: Context, next: Next) {
+    const authorization = ctx.get("Authorization");
+    const match = authorization.match(/^Bearer\s+(.+)$/i);
 
-  if (!configuredToken || !match || match[1] !== configuredToken) {
-    unauthorized(ctx);
-    return;
-  }
+    if (!configuredToken || !match || match[1] !== configuredToken) {
+      unauthorized(ctx);
+      return;
+    }
 
-  await next();
+    await next();
+  };
 }
 
 export default authentication;
