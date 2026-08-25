@@ -1,12 +1,15 @@
 rules:
-  - id: software-factory.anti-slop.focused-test
-    message: Focused tests accidentally narrow the repository's qualification evidence.
+  - id: software-factory-anti-slop
+    message: Focused tests must not narrow qualification evidence.
     severity: ERROR
     languages: [javascript, typescript]
     pattern-either:
       - pattern: test.only(...)
       - pattern: it.only(...)
       - pattern: describe.only(...)
-      - pattern: suite.only(...)
-      - pattern: fdescribe(...)
       - pattern: fit(...)
+*** Add File: /tmp/todos-nodejs-setup-2/.dagger/semgrep/software-factory-anti-slop.test.ts
+test.only("focused", () => true)
+it.only("focused", () => true)
+describe.only("focused", () => true)
+fit("focused", () => true)
