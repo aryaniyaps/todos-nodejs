@@ -4,7 +4,13 @@ development:
   initialize: [sh, -c, 'DATABASE_URL=file:./dev.db npx prisma db push --skip-generate']
   start: [sh, -c, 'PORT=3000 DATABASE_URL=file:./dev.db npm run dev']
   health: [sh, -c, 'curl -fsS "http://127.0.0.1:${PORT:-3000}/api/todos" >/dev/null']
-inputs: []
+inputs:
+  - name: FACTORY_TODOS_AUTH_BASE_URL
+    kind: setting
+    scopes: [qualification]
+  - name: FACTORY_TODOS_AUTH_TOKEN
+    kind: secret
+    scopes: [qualification]
 automations:
   - schemaVersion: software-factory.automation/v1
     id: semgrep
