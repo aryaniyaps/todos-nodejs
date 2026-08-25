@@ -3,14 +3,14 @@ development:
   prepare: [npm, ci]
   initialize: [sh, -c, 'DATABASE_URL=file:./dev.db npx prisma db push --skip-generate']
   start: [sh, -c, 'PORT=3000 DATABASE_URL=file:./dev.db npm run dev']
-  health: [sh, -c, 'code=$(curl -sS -o /dev/null -w "%{http_code}" "http://127.0.0.1:${PORT:-3000}/api/todos") && test "$code" = 200 -o "$code" = 401']
+  health: [sh, -c, 'curl -fsS -H "Authorization: Bearer ${FACTORY_TODOS_AUTH_TOKEN}" "http://127.0.0.1:${PORT:-3000}/api/todos" >/dev/null']
 inputs:
   - name: FACTORY_TODOS_AUTH_BASE_URL
     kind: setting
     scopes: [qualification]
   - name: FACTORY_TODOS_AUTH_TOKEN
     kind: secret
-    scopes: [qualification]
+    scopes: [agent, qualification]
 automations:
   - schemaVersion: software-factory.automation/v1
     id: semgrep
