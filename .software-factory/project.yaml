@@ -8,7 +8,7 @@ inputs:
   - name: FACTORY_TODOS_AUTH_BASE_URL
     kind: setting
     scopes: [qualification]
-  - name: TODOS_API_TOKEN
+  - name: FACTORY_TODOS_AUTH_TOKEN
     kind: secret
     scopes: [qualification]
 automations:
