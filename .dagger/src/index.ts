@@ -1,4 +1,4 @@
-import { dag, Directory, object, func } from "@dagger.io/dagger"
+import { dag, Directory, Secret, object, func } from "@dagger.io/dagger"
 
 const SEMGREP_IMAGE = "docker.io/semgrep/semgrep@sha256:6bd07d7b166b097e1384f41b94a62d8c8a26a4fff8713992c296e053310da01f"
 const ALINT_IMAGE = "ghcr.io/asamarts/alint:v0.15.0@sha256:e7e7631979741a9b2fdcde106ee8c57513ec2b02a317dcc91614f435c89798ca"
@@ -48,15 +48,26 @@ export class Qualification {
   }
 
   @func()
-  async qualification(source: Directory): Promise<string> {
+  async qualification(
+    source: Directory,
+    factoryTodosAuthBaseUrl?: string,
+    factoryTodosAuthToken?: Secret,
+  ): Promise<string> {
     await this.semgrep(source)
     await this.alint(source)
     await this.lsLint(source)
 
-    return dag.container()
+    let application = dag.container()
       .from(NODE_IMAGE)
       .withMountedDirectory("/src", source)
       .withWorkdir("/src")
+    if (factoryTodosAuthBaseUrl !== undefined) {
+      application = application.withEnvVariable("FACTORY_TODOS_AUTH_BASE_URL", factoryTodosAuthBaseUrl)
+    }
+    if (factoryTodosAuthToken !== undefined) {
+      application = application.withSecretVariable("FACTORY_TODOS_AUTH_TOKEN", factoryTodosAuthToken)
+    }
+    return application
       .withExec(["npm", "ci"])
       .withExec(["npm", "exec", "--", "tsc", "--noEmit"])
       .withExec(["npm", "test"])
