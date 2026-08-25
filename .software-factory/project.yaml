@@ -2,7 +2,7 @@ schemaVersion: software-factory.project/v4
 development:
   prepare: [npm, ci]
   initialize: [sh, -c, 'DATABASE_URL=file:./dev.db npx prisma db push --skip-generate']
-  start: [sh, -c, 'PORT=3000 DATABASE_URL=file:./dev.db npm run dev']
+  start: [sh, -c, 'TODOS_API_TOKEN="${FACTORY_TODOS_AUTH_TOKEN:-$TODOS_API_TOKEN}" PORT=3000 DATABASE_URL=file:./dev.db npm run dev']
   health: [sh, -c, 'curl -sS "http://127.0.0.1:${PORT:-3000}/api/todos" >/dev/null']
 inputs:
   - name: FACTORY_TODOS_AUTH_BASE_URL
