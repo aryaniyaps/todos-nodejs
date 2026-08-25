@@ -1,26 +1,18 @@
 import Koa from "koa";
-import bodyParser from "koa-body";
-
-import router from "./router";
 import errorHandler from "./core/middleware/error-handler";
+import createRouter from "./router";
 
-function createApp(): Koa {
+export function createApp(expectedToken = process.env.FACTORY_TODOS_AUTH_TOKEN): Koa {
   const app = new Koa();
-  addMiddleware(app);
-  addRoutes(app);
+  app.use(errorHandler);
+  const router = createRouter(expectedToken);
+  app.use(router.routes());
+  app.use(router.allowedMethods());
   return app;
 }
 
-function addMiddleware(app: Koa) {
-  app.use(bodyParser());
-  app.use(errorHandler);
+if (require.main === module) {
+  const app = createApp();
+  app.listen(process.env.PORT);
+  console.log(`🚀 Starting at ${process.env.PORT}`);
 }
-
-function addRoutes(app: Koa) {
-  app.use(router.routes());
-  app.use(router.allowedMethods());
-}
-
-const app = createApp();
-app.listen(process.env.PORT);
-console.log(`🚀 Starting at ${process.env.PORT}`);
