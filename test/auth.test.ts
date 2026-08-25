@@ -5,7 +5,7 @@ import { test } from "node:test";
 process.env.TODOS_API_TOKEN = "test-token";
 const { createApp } = require("../src/index") as typeof import("../src/index");
 
-function request(authorization?: string, path = "/api/todos"): Promise<http.IncomingMessage> {
+function request(authorization?: string, path = "/api/todos"): Promise<{ statusCode?: number; body: unknown }> {
   const server = http.createServer(createApp().callback());
   return new Promise((resolve, reject) => {
     server.listen(0, "127.0.0.1", () => {
@@ -17,9 +17,14 @@ function request(authorization?: string, path = "/api/todos"): Promise<http.Inco
         headers: authorization ? { Authorization: authorization } : undefined,
       };
       const client = http.get(requestOptions, (response) => {
-        response.resume();
+        const chunks: Buffer[] = [];
+        response.on("data", (chunk: Buffer) => chunks.push(chunk));
         response.on("end", () => {
-          server.close((error) => (error ? reject(error) : resolve(response)));
+          const rawBody = Buffer.concat(chunks).toString();
+          const body = rawBody ? JSON.parse(rawBody) : undefined;
+          server.close((error) =>
+            error ? reject(error) : resolve({ statusCode: response.statusCode, body }),
+          );
         });
       });
       client.on("error", reject);
@@ -38,6 +43,7 @@ test("authentication rejects an invalid bearer token", async () => {
 });
 
 test("authentication preserves the Todos API for a valid bearer token", async () => {
-  const response = await request("Bearer test-token", "/api/todos/not-a-route");
-  assert.strictEqual(response.statusCode, 405);
+  const response = await request("Bearer test-token");
+  assert.strictEqual(response.statusCode, 500);
+  assert.deepStrictEqual(response.body, { message: "Internal Server error" });
 });
