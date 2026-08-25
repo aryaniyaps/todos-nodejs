@@ -4,5 +4,12 @@ ls:
     .ts: kebab-case
     .yml: kebab-case
     .yaml: kebab-case
+  src:
+    .dir: kebab-case
+    .ts: kebab-case
+  test:
+    .ts: regex:([a-z0-9]+\.)*test
 ignore:
   - .git
+  - node_modules
+  - dist
